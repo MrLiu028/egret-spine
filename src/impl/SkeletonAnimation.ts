@@ -142,6 +142,51 @@ namespace spine {
         private autoRun: boolean;
         private paused: boolean;
 
+        /**
+         * 创建骨骼动画
+         * @param jsonKey spine动画的json文件资源key
+         * @param atlasKey spine动画的atlas文件资源key
+         * @param pngKeys spine动画的图片文件资源key
+         * @return 当前类实例
+         */
+        public static create(jsonKey: string, atlasKey?: string, pngKeys?: string[]) {
+            let [json, atlas, textures] = loader.getSpine(jsonKey, atlasKey, pngKeys);
+            let textureAtlas = createTextureAtlas(atlas, textures);
+            let skeletonData = createSkeletonData(json, textureAtlas);
+            let renderer = new spine.SkeletonRenderer(skeletonData);
+            return new this(renderer);
+        }
+
+        /**
+         * 异步创建骨骼动画
+         * @param jsonKey spine动画的json文件资源key
+         * @param atlasKey spine动画的atlas文件资源key
+         * @param pngKeys spine动画的图片文件资源key
+         * @return Promise, resolve值为当前类实例
+         */
+        public static async createAsync(jsonKey: string, atlasKey?: string, pngKeys?: string[]) {
+            let [json, atlas, textures] = await loader.getSpineAsync(jsonKey, atlasKey, pngKeys);
+            let textureAtlas = createTextureAtlas(atlas, textures);
+            let skeletonData = createSkeletonData(json, textureAtlas);
+            let renderer = new spine.SkeletonRenderer(skeletonData);
+            return new this(renderer);
+        }
+
+        /**
+         * 异步创建骨骼动画数据
+         * @param jsonURL spine动画的json文件URL
+         * @param atlasURL spine动画的atlas文件URL
+         * @param pngURLs spine动画的图片文件URL
+         * @return Promise, resolve值为当前类实例
+         */
+        public static async createByURL(jsonURL: string, atlasURL?: string, pngURLs?: string[]) {
+            let [json, atlas, textures] = await loader.getSpineByURL(jsonURL, atlasURL, pngURLs);
+            let textureAtlas = createTextureAtlas(atlas, textures);
+            let skeletonData = createSkeletonData(json, textureAtlas);
+            let renderer = new spine.SkeletonRenderer(skeletonData);
+            return new this(renderer);
+        }
+
         public constructor(protected renderer: SkeletonRenderer) {
             super();
             const callback = this.onEventCallback;
@@ -159,6 +204,14 @@ namespace spine {
             this.addEventListener(egret.Event.REMOVED_FROM_STAGE, this.onRemovedFromStage, this);
         }
 
+        public get width() {
+            return this.renderer.width;
+        }
+
+        public get height() {
+            return this.renderer.height;
+        }
+
         public get skeleton(): Skeleton {
             return this.renderer.skeleton;
         }
@@ -169,14 +222,6 @@ namespace spine {
 
         public get stateData(): AnimationStateData {
             return this.renderer.stateData;
-        }
-
-        public get width() {
-            return this.renderer.width;
-        }
-
-        public get height() {
-            return this.renderer.height;
         }
 
         /**
