@@ -7,7 +7,7 @@ namespace spine {
         return event && event.data ? event.data.name : '';
     }
 
-    class TrackObserver {
+    export class TrackObserver {
         private triggers = {};
         private completed: boolean;
 
@@ -109,11 +109,11 @@ namespace spine {
             }
             switch (type) {
                 case EventType.complete: {
-                    if (--this.loops <= 0) this.interrupt();
+                    if (--this.loops == 0) this.interrupt();
                     break;
                 }
-                // in case of clear track directly.
                 case EventType.end: {
+                    // in case of clear track directly.
                     if (!this.completed) this.interrupt();
                     break;
                 }
@@ -228,7 +228,7 @@ namespace spine {
          * 返回指定动画轨道的监听器
          * @param track 动画轨道索引
          */
-        public observe(track: number) {
+        public observe(track: number = 0) {
             return this.observers[track] || null;
         }
 
@@ -261,8 +261,8 @@ namespace spine {
         public play(anim: string, times = 0, track = 0, autoRun = true): TrackObserver {
             let state = this.renderer.state;
 
+            if (times < 0) times = 0;
             if (track < 0) track = 0;
-            if (times <= 0) times = Infinity;
             if (autoRun) {
                 this.autoRun = true;
                 this.autoSchedule();
@@ -350,9 +350,8 @@ namespace spine {
             if (observer) {
                 observer.dispatchEvent(type, entry, event);
             }
-            if (type == EventType.dispose) {
-                this.observers[entry.trackIndex] = null;
-                if (this.autoRun) this.autoRun = this.stopSchedule() > 0;
+            if (type == EventType.dispose && this.autoRun) {
+                this.autoRun = this.stopSchedule() > 0;
             }
         }
     }
