@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "outFile": "main.js",
+        "lib": [
+            "es5",
+            "dom",
+            "es2015.promise"
+        ]
+    },
+    "include": [
+        "src/**/*.ts"
+    ]
+}

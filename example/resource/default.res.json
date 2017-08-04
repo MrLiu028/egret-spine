@@ -1,0 +1,40 @@
+{
+	"groups": [
+		{
+			"name": "preload",
+			"keys": "spineboy_json,spineboy_atlas,spineboy_png"
+		}
+	],
+	"resources": [
+		{
+			"name": "spineboy_json",
+			"type": "json",
+			"url": "assets/spineboy.json"
+		},
+		{
+			"name": "spineboy_atlas",
+			"type": "text",
+			"url": "assets/spineboy.atlas"
+		},
+		{
+			"name": "spineboy_png",
+			"type": "image",
+			"url": "assets/spineboy.png"
+		},
+		{
+			"name": "tank_json",
+			"type": "json",
+			"url": "assets/tank.json"
+		},
+		{
+			"name": "tank_atlas",
+			"type": "text",
+			"url": "assets/tank.atlas"
+		},
+		{
+			"name": "tank_png",
+			"type": "image",
+			"url": "assets/tank.png"
+		}
+	]
+}
