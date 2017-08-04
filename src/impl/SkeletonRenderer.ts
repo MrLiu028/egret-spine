@@ -85,7 +85,7 @@ namespace spine {
         dispose(): void { }
     }
 
-    class SlotRenderer extends egret.DisplayObjectContainer {
+    export class SlotRenderer extends egret.DisplayObjectContainer {
         private currentSprite: egret.DisplayObject;
         private colorFilter = new egret.ColorMatrixFilter();
 
