@@ -14,7 +14,7 @@ namespace spine.loader {
     /** TODO: deal with query and hash */
     function dirname(url: string) {
         let entries = url.split('/');
-        if (entries.pop()) entries.pop();
+        if (!entries.pop()) entries.pop();
         return entries.join('/');
     }
 
@@ -123,7 +123,7 @@ namespace spine.loader {
      * @return Promise, resolve值为资源数组: [json文件, atlas文件, 图片资源表]
      */
     export function getSpineByURL(jsonURL: string, atlasURL?: string, pngURLs?: string[]) {
-        let baseURL = dirname(jsonURL) + basename(jsonURL, '.json');
+        let baseURL = dirname(jsonURL) + '/' + basename(jsonURL, '.json');
         if (!atlasURL) atlasURL = baseURL + '.atlas';
         if (!pngURLs) pngURLs = [baseURL + '.png'];
 
