@@ -1,3 +1,7 @@
+/**
+ * Spine skeleton renderer for Egret.
+ * repo: https://github.com/fightingcat/egret-spine
+ */
 namespace spine {
     /**
      * 创建骨骼数据

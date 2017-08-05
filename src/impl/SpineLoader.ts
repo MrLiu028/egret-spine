@@ -1,3 +1,7 @@
+/**
+ * A series of functions for loading and creating skeleton data.
+ * repo: https://github.com/fightingcat/egret-spine
+ */
 namespace spine.loader {
 
     /** TODO: deal with query and hash */

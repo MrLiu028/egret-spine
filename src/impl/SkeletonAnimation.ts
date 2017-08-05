@@ -1,3 +1,7 @@
+/**
+ * An easy to use skeleton animation implementation.
+ * repo: https://github.com/fightingcat/egret-spine
+ */
 namespace spine {
     interface Trigger<T> extends Promise<T> {
         resolve: (value: T | PromiseLike<T>) => void;
@@ -90,7 +94,6 @@ namespace spine {
          */
         public interrupt() {
             this.completed = true;
-            this.clearObservations();
             this.state.clearTrack(this.track);
         }
 
@@ -117,6 +120,7 @@ namespace spine {
                     if (!this.completed) this.interrupt();
                     break;
                 }
+                case EventType.dispose:
                 case EventType.interrupt: {
                     this.clearObservations();
                     break;
