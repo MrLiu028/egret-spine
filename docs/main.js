@@ -57,70 +57,101 @@ var Main = (function (_super) {
     };
     Main.prototype.loadComplete = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var boy1, boy2, tank, track;
+            return __generator(this, function (_a) {
+                this.createTank();
+                this.createBoy1();
+                this.createBoy2();
+                return [2 /*return*/];
+            });
+        });
+    };
+    Main.prototype.createTank = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var tank, track;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, spine.SkeletonAnimation.createAsync('tank_json', 'tank_atlas', ['tank_png'])];
+                    case 1:
+                        tank = _a.sent();
+                        this.addAnimation(tank, 850, 480);
+                        track = tank.play('drive');
+                        _a.label = 2;
+                    case 2: return [4 /*yield*/, track.whenComplete()];
+                    case 3:
+                        if (!_a.sent()) return [3 /*break*/, 4];
+                        tank.scaleX *= -1;
+                        tank.x = tank.scaleX > 0 ? 850 : 250;
+                        return [3 /*break*/, 2];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    Main.prototype.createBoy1 = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var boy, names, i;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        boy1 = spine.SkeletonAnimation.create('spineboy_json');
-                        this.addAnimation(boy1, 240, 480);
-                        return [4 /*yield*/, spine.SkeletonAnimation.createByURL('resource/assets/spineboy.json')];
+                        boy = spine.SkeletonAnimation.create('spineboy_json');
+                        this.addAnimation(boy, 240, 240);
+                        names = boy.skeleton.data.animations.map(function (anim) { return anim.name; });
+                        i = 0;
+                        _a.label = 1;
                     case 1:
-                        boy2 = _a.sent();
-                        this.addAnimation(boy2, 720, 480);
-                        boy2.scaleX *= -1;
-                        return [4 /*yield*/, spine.SkeletonAnimation.createAsync('tank_json', 'tank_atlas', ['tank_png'])];
+                        if (!true) return [3 /*break*/, 4];
+                        // wait for animation end.
+                        return [4 /*yield*/, boy.play(names[i], 1).whenEnd()];
                     case 2:
-                        tank = _a.sent();
-                        /**
-                         * Simpler way:
-                         * spine.SkeletonAnimation.createAsync('tank_json');
-                         *
-                         * Or more primitive way:
-                         * let skelData = await spine.loader.createSkeletonDataAsync('tank_json');
-                         * let renderer = new spine.SkeletonRenderer(skelData);
-                         * let animation = new spine.SkeletonAnimation(renderer);
-                         */
-                        tank.x = 850;
-                        tank.y = 480;
-                        tank.scaleX = tank.scaleY = 0.2;
-                        this.addChildAt(tank, 0);
-                        this.enableDragging(tank);
-                        track = tank.play('drive');
+                        // wait for animation end.
+                        _a.sent();
+                        i = (i + 1) % names.length;
                         _a.label = 3;
-                    case 3: return [4 /*yield*/, track.whenComplete()];
-                    case 4:
-                        if (!_a.sent()) return [3 /*break*/, 5];
-                        tank.scaleX *= -1;
-                        tank.x = tank.scaleX > 0 ? 850 : 250;
-                        return [3 /*break*/, 3];
-                    case 5: return [2 /*return*/];
+                    case 3:
+                        i = ++i % names.length;
+                        return [3 /*break*/, 1];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    Main.prototype.createBoy2 = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var boy, track, step, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4 /*yield*/, spine.SkeletonAnimation.createByURL('resource/assets/spineboy.json')];
+                    case 1:
+                        boy = _b.sent();
+                        this.addAnimation(boy, 720, 240);
+                        boy.scaleX *= -1;
+                        track = boy.play('run');
+                        step = 0;
+                        _b.label = 2;
+                    case 2:
+                        _a = 'footstep';
+                        return [4 /*yield*/, track.whenEvent()];
+                    case 3:
+                        if (!(_a == (_b.sent()))) return [3 /*break*/, 4];
+                        if (++step % 5 == 0) {
+                            // Play another animation on track 1.
+                            boy.play('shoot', 1, 1);
+                        }
+                        return [3 /*break*/, 2];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
     };
     Main.prototype.addAnimation = function (animation, x, y) {
         return __awaiter(this, void 0, void 0, function () {
-            var i, names;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        i = 0;
-                        names = animation.skeleton.data.animations.map(function (anim) { return anim.name; });
-                        animation.x = x;
-                        animation.y = y;
-                        animation.scaleX = animation.scaleY = 200 / animation.height;
-                        this.addChild(animation);
-                        this.enableDragging(animation);
-                        _a.label = 1;
-                    case 1:
-                        if (!true) return [3 /*break*/, 3];
-                        return [4 /*yield*/, animation.play(names[i], 1).whenEnd()];
-                    case 2:
-                        _a.sent();
-                        i = (i + 1) % names.length;
-                        return [3 /*break*/, 1];
-                    case 3: return [2 /*return*/];
-                }
+                animation.x = x;
+                animation.y = y;
+                animation.scaleX = animation.scaleY = 200 / animation.height;
+                this.addChild(animation);
+                this.enableDragging(animation);
+                return [2 /*return*/];
             });
         });
     };
@@ -140,6 +171,31 @@ var Main = (function (_super) {
         }, this);
         target.addEventListener(egret.TouchEvent.TOUCH_END, function (event) { return dragging = false; }, this);
         target.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, function (event) { return dragging = false; }, this);
+    };
+    Main.prototype.test = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var boy, track, step, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        boy = spine.SkeletonAnimation.create('spineboy_json');
+                        track = boy.play('walk');
+                        step = 0;
+                        _b.label = 1;
+                    case 1:
+                        _a = 'footstep';
+                        return [4 /*yield*/, track.whenEvent()];
+                    case 2:
+                        if (!(_a == (_b.sent()))) return [3 /*break*/, 3];
+                        if (++step % 5 == 0) {
+                            // Play another animation on track 1.
+                            boy.play('shoot', 1, 1);
+                        }
+                        return [3 /*break*/, 1];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
     };
     return Main;
 }(egret.DisplayObjectContainer));

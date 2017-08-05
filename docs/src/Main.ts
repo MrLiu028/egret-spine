@@ -11,18 +11,15 @@ class Main extends egret.DisplayObjectContainer {
     }
 
     private async loadComplete() {
-        // synchronously create animation by resource key.
-        let boy1 = spine.SkeletonAnimation.create('spineboy_json');
-        this.addAnimation(boy1, 240, 480);
+        this.createTank();
+        this.createBoy1();
+        this.createBoy2();
+    }
 
-        // asynchronously create animation by url.
-        let boy2 = await spine.SkeletonAnimation.createByURL('resource/assets/spineboy.json');
-        this.addAnimation(boy2, 720, 480);
-        boy2.scaleX *= -1;
-
-        // create animation asynchronously by resource key.
-        let tank = await spine.SkeletonAnimation.createAsync('tank_json', 'tank_atlas', ['tank_png']);
+    private async createTank() {
         /**
+         * create animation asynchronously by resource key.
+         * 
          * Simpler way:
          * spine.SkeletonAnimation.createAsync('tank_json');
          * 
@@ -31,11 +28,8 @@ class Main extends egret.DisplayObjectContainer {
          * let renderer = new spine.SkeletonRenderer(skelData);
          * let animation = new spine.SkeletonAnimation(renderer);
          */
-        tank.x = 850;
-        tank.y = 480;
-        tank.scaleX = tank.scaleY = 0.2;
-        this.addChildAt(tank, 0);
-        this.enableDragging(tank);
+        let tank = await spine.SkeletonAnimation.createAsync('tank_json', 'tank_atlas', ['tank_png']);
+        this.addAnimation(tank, 850, 480);
 
         // loop forever, and flip every time loop complete.
         let track = tank.play('drive');
@@ -45,21 +39,47 @@ class Main extends egret.DisplayObjectContainer {
         }
     }
 
-    private async addAnimation(animation: spine.SkeletonAnimation, x: number, y: number) {
-        let i = 0;
-        let names = animation.skeleton.data.animations.map(anim => anim.name);
+    private async createBoy1() {
+        // synchronously create animation by resource key.
+        let boy = spine.SkeletonAnimation.create('spineboy_json');
+        this.addAnimation(boy, 240, 240);
 
+        // play animations one by one
+        let names = boy.skeleton.data.animations.map(anim => anim.name);
+
+        for (let i = 0; true; i = ++i % names.length) {
+            // wait for animation end.
+            await boy.play(names[i], 1).whenEnd();
+            i = (i + 1) % names.length;
+        }
+    }
+
+    private async createBoy2() {
+        // asynchronously create animation by url.
+        let boy = await spine.SkeletonAnimation.createByURL('resource/assets/spineboy.json');
+        this.addAnimation(boy, 720, 240);
+        boy.scaleX *= -1;
+
+        // Play an animation. With default parameters,
+        // that would play animation on track 0 and loop forever.
+        let track = boy.play('run');
+        let step = 0;
+
+        // Observe an event.
+        while ('footstep' == await track.whenEvent()) {
+            if (++step % 5 == 0) {
+                // Play another animation on track 1.
+                boy.play('shoot', 1, 1);
+            }
+        }
+    }
+
+    private async addAnimation(animation: spine.SkeletonAnimation, x: number, y: number) {
         animation.x = x;
         animation.y = y;
         animation.scaleX = animation.scaleY = 200 / animation.height;
         this.addChild(animation);
         this.enableDragging(animation);
-
-        // play animations one by one
-        while (true) {
-            await animation.play(names[i], 1).whenEnd();
-            i = (i + 1) % names.length;
-        }
     }
 
     private enableDragging(target: egret.DisplayObject) {
@@ -81,5 +101,25 @@ class Main extends egret.DisplayObjectContainer {
 
         target.addEventListener(egret.TouchEvent.TOUCH_END, event => dragging = false, this);
         target.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, event => dragging = false, this);
+    }
+
+    async test() {
+        // Create a skeleton animation. Or alternatively:
+        // let boy = await spine.SkeletonAnimation.createAsync('spineboy_json');
+        // let boy = await spine.SkeletonAnimation.createByURL('resource/assets/spineboy.json');
+        let boy = spine.SkeletonAnimation.create('spineboy_json');
+
+        // Play an animation. With default parameters,
+        // that would play animation on track 0 and loop forever.
+        let track = boy.play('walk');
+
+        // Observe an event.
+        let step = 0;
+        while ('footstep' == await track.whenEvent()) {
+            if (++step % 5 == 0) {
+                // Play another animation on track 1.
+                boy.play('shoot', 1, 1);
+            }
+        }
     }
 }

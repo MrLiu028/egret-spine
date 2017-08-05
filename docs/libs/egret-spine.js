@@ -7900,6 +7900,10 @@ var spine;
     }());
     spine.SwirlEffect = SwirlEffect;
 })(spine || (spine = {}));
+/**
+ * An easy to use skeleton animation implementation.
+ * repo: https://github.com/fightingcat/egret-spine
+ */
 var spine;
 (function (spine) {
     function getEventName(event) {
@@ -7981,7 +7985,6 @@ var spine;
          */
         TrackObserver.prototype.interrupt = function () {
             this.completed = true;
-            this.clearObservations();
             this.state.clearTrack(this.track);
         };
         /**
@@ -8008,6 +8011,7 @@ var spine;
                         this.interrupt();
                     break;
                 }
+                case spine.EventType.dispose:
                 case spine.EventType.interrupt: {
                     this.clearObservations();
                     break;
@@ -8270,6 +8274,10 @@ var spine;
     }(egret.DisplayObjectContainer));
     spine.SkeletonAnimation = SkeletonAnimation;
 })(spine || (spine = {}));
+/**
+ * Spine skeleton renderer for Egret.
+ * repo: https://github.com/fightingcat/egret-spine
+ */
 var spine;
 (function (spine) {
     /**
@@ -8433,6 +8441,10 @@ var spine;
     }(egret.DisplayObjectContainer));
     spine.SlotRenderer = SlotRenderer;
 })(spine || (spine = {}));
+/**
+ * A series of functions for loading and creating skeleton data.
+ * repo: https://github.com/fightingcat/egret-spine
+ */
 var spine;
 (function (spine) {
     var loader;
